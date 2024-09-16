@@ -1,0 +1,227 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
+import { Separator } from "@/components/ui/separator";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  HandPlatter,
+  Loader2,
+  Menu,
+  Moon,
+  PackageCheck,
+  ShoppingCart,
+  SquareMenu,
+  Sun,
+  User,
+  UtensilsCrossed,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+
+const Navbar = () => {
+  const admin = true;
+  const loading = false;
+  return (
+    <div className="max-w-7xl mx-auto">
+      <div className="flex items-center justify-between h-14">
+        <Link to="/">
+          <h1 className="font-bold md:font-extrabold text-2xl">Khamu</h1>
+        </Link>
+        <div className="hidden md:flex items-center gap-10">
+          <div className="hidden md:flex items-center gap-6">
+            <Link to="/">Home</Link>
+            <Link to="/profile">Profile</Link>
+            <Link to="/order/status">Order</Link>
+            {admin && (
+              <Menubar>
+                <MenubarMenu>
+                  <MenubarTrigger>Dashboard</MenubarTrigger>
+                  <MenubarContent>
+                    <Link to="/admin/restaurant">
+                      <MenubarItem>Restaurant</MenubarItem>
+                    </Link>
+                    <Link to="/admin/menu">
+                      <MenubarItem>Menu</MenubarItem>
+                    </Link>
+                    <Link to="/admin/order">
+                      <MenubarItem>Order</MenubarItem>
+                    </Link>
+                  </MenubarContent>
+                </MenubarMenu>
+              </Menubar>
+            )}
+          </div>
+          <div className="flex items-center gap-4">
+            <div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon">
+                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                    <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                    <span className="sr-only">Toggle theme</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>Light</DropdownMenuItem>
+                  <DropdownMenuItem>Dark</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <Link to="/cart" className="relative cursor-pointer">
+              <ShoppingCart />
+              <Button
+                size={"icon"}
+                className="absolute -inset-y-3 left-2 text-xs rounded-full size-4 bg-red-500 hover:bg-red-500"
+              >
+                5
+              </Button>
+            </Link>
+            <div>
+              <Avatar>
+                <AvatarImage />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </div>
+            <div>
+              {loading ? (
+                <Button className="bg-orange hover:bg-hoverOrange">
+                  <Loader2 className="animate-spin mr-2 size-4" />
+                  Please wait
+                </Button>
+              ) : (
+                <Button className="bg-orange hover:bg-hoverOrange">
+                  Logout
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="md:hidden">
+          {/* mobile responsive */}
+          <MobileNavbar />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Navbar;
+
+const MobileNavbar = () => {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button
+          size={"icon"}
+          className="rounded-full bg-gray-200 text-black"
+          variant="outline"
+        >
+          <Menu size={"18"} />
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="flex flex-col">
+        <SheetHeader className="flex flex-row items-center justify-between mt-2">
+          <SheetTitle>Khamu</SheetTitle>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>Light</DropdownMenuItem>
+              <DropdownMenuItem>Dark</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SheetHeader>
+        <Separator className="my-2" />
+        <SheetDescription className="flex-1">
+          <Link
+            to="/profile"
+            className="flex items-center gap-4 hover:bg-gray-200 py-2 rounded-lg cursor-pointer hover:text-gray-400"
+          >
+            <User />
+            <span>Profile</span>
+          </Link>
+          <Link
+            to="/profile"
+            className="flex items-center gap-4 hover:bg-gray-200 py-2 rounded-lg cursor-pointer hover:text-gray-400"
+          >
+            <HandPlatter />
+            <span>Order</span>
+          </Link>
+          <Link
+            to="/profile"
+            className="flex items-center gap-4 hover:bg-gray-200 py-2 rounded-lg cursor-pointer hover:text-gray-400"
+          >
+            <ShoppingCart />
+            <span>Cart(0)</span>
+          </Link>
+          <Link
+            to="/profile"
+            className="flex items-center gap-4 hover:bg-gray-200 py-2 rounded-lg cursor-pointer hover:text-gray-400"
+          >
+            <SquareMenu />
+            <span>Menu</span>
+          </Link>
+          <Link
+            to="/profile"
+            className="flex items-center gap-4 hover:bg-gray-200 py-2 rounded-lg cursor-pointer hover:text-gray-400"
+          >
+            <UtensilsCrossed />
+            <span>Restaurant</span>
+          </Link>
+          <Link
+            to="/profile"
+            className="flex items-center gap-4 hover:bg-gray-200 py-2 rounded-lg cursor-pointer hover:text-gray-400"
+          >
+            <PackageCheck />
+            <span>Restaurant Orders</span>
+          </Link>
+        </SheetDescription>
+        <div className="flex flex-row items-center gap-2">
+            <Avatar>
+              <AvatarImage />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            <h1 className="font-bold">Rakib</h1>
+          </div>
+        <SheetFooter className="flex flex-col gap-4">
+          
+          <SheetClose asChild>
+            <Button
+              type="submit"
+              className="w-full bg-orange hover:bg-hoverOrange"
+            >
+              Save changes
+            </Button>
+          </SheetClose>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  );
+};

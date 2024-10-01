@@ -166,7 +166,7 @@ const MobileNavbar = () => {
             <span>Profile</span>
           </Link>
           <Link
-            to="/profile"
+            to="/order/status"
             className="flex items-center gap-4 hover:bg-gray-200 py-2 rounded-lg cursor-pointer hover:text-gray-400"
           >
             <HandPlatter />

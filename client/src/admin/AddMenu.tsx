@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2, Plus } from "lucide-react";
 import { FormEvent, useState } from "react";
 import EditMenu from "./EditMenu";
+import { MenuFormSchema, menuSchema } from "@/schema/menuSchema";
 
 const menus = [
     {
@@ -31,7 +32,7 @@ const menus = [
 
 const AddMenu = () => {
 
-    const [input, setInput] = useState<any>({
+    const [input, setInput] = useState<MenuFormSchema>({
         name: "",
         description: "",
         price: 0,
@@ -41,6 +42,8 @@ const AddMenu = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [editOpen, setEditOpen] = useState<boolean>(false);
   const [selectedMenu, setSelectedMenu] = useState<any>();
+  const [error, setError] = useState<Partial<MenuFormSchema>>({});
+
   const loading = false;
 
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,6 +53,12 @@ const AddMenu = () => {
 
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const result = menuSchema.safeParse(input);
+    if(!result.success) {
+      const fieldErrors = result.error.formErrors.fieldErrors;
+      setError(fieldErrors as Partial<MenuFormSchema>);
+      return;
+    }
     console.log(input);
   }
 
@@ -82,6 +91,7 @@ const AddMenu = () => {
                 value={input.name}
                 onChange={changeEventHandler}
                 placeholder="Enter item name" />
+                {error && <span className="text-xs font-medium text-red-600">{error.name}</span>}
               </div>
               <div>
                 <Label>Description</Label>
@@ -92,6 +102,7 @@ const AddMenu = () => {
                   onChange={changeEventHandler}
                   placeholder="Enter item description"
                 />
+                {error && <span className="text-xs font-medium text-red-600">{error.description}</span>}
               </div>
               <div>
                 <Label>Price in (TK)</Label>
@@ -102,6 +113,7 @@ const AddMenu = () => {
                   onChange={changeEventHandler}
                   placeholder="Enter item price"
                 />
+                {error && <span className="text-xs font-medium text-red-600">{error.price}</span>}
               </div>
               <div>
                 <Label>upload Image</Label>
@@ -110,6 +122,7 @@ const AddMenu = () => {
                 name="image" 
                 // value={input.image}
                 onChange={(e) => setInput({...input, image: e.target.files?.[0] || undefined})}/>
+                {error && <span className="text-xs font-medium text-red-600">{error.image?.name}</span>}
               </div>
               <DialogFooter className="mt-5">
                 {loading ? (
@@ -146,7 +159,7 @@ const AddMenu = () => {
               <span className="text-[#d19254] ml-1">{menu.price}</span>
             </h2>
           </div>
-          <Button onClick={() => setSelectedMenu(menu)} className="bg-orange hover:bg-hoverOrange mt-2" size={"sm"}>
+          <Button onClick={() => { setSelectedMenu(menu); setEditOpen(true)}} className="bg-orange hover:bg-hoverOrange mt-2" size={"sm"}>
             Edit
           </Button>
         </div>
@@ -154,7 +167,7 @@ const AddMenu = () => {
         ))
       }
       
-      <EditMenu selectedMenu = {selectedMenu} />
+      <EditMenu selectedMenu = {selectedMenu} editOpen={editOpen} setEditOpen={setEditOpen} />
     </div>
   );
 };

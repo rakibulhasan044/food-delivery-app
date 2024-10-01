@@ -180,7 +180,7 @@ const MobileNavbar = () => {
             <span>Cart(0)</span>
           </Link>
           <Link
-            to="/profile"
+            to="/admin/menu"
             className="flex items-center gap-4 hover:bg-gray-200 py-2 rounded-lg cursor-pointer hover:text-gray-400"
           >
             <SquareMenu />

@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "target": "ESNext",                          // Keeps your JavaScript output to the latest ECMAScript version.
+      "module": "ESNext",                          // Use ESNext modules for compatibility with your execution environment.
+      "moduleResolution": "node",                   // Ensures Node.js-style module resolution.
+      "esModuleInterop": true,                      // Enables interoperability between CommonJS and ES Modules.
+      "skipLibCheck": true,                        // Skips type checking of declaration files for faster builds.
+      "forceConsistentCasingInFileNames": true,   // Ensures that the file casing is consistent in imports.
+      "strict": true,                              // Enables all strict type-checking options for better type safety.
+      "outDir": "./dist",                          // Specifies the output directory for compiled JavaScript files.
+      "rootDir": "./"                              // Specifies the root directory of input files. This helps in maintaining folder structure in the output.
+    },
+    "include": ["*.ts", "src/**/*.ts"],           // Include TypeScript files in the current directory and in a src folder.
+    "exclude": ["node_modules"]                    // Exclude node_modules from the compilation.
+  }
+  

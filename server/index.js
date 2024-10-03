@@ -1,10 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./db/connectDB.js";
-import userRoute from "./routes/user.route.js"
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors"
+import userRoute from "./routes/user.route.js"
+import restaurantRoute from "./routes/restaurant.route.js"
 dotenv.config();
 
 const app = express();
@@ -23,8 +24,9 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 
-///user api
+// api
 app.use("/api/v1/user", userRoute);
+app.use("/api/v1/restaurant", restaurantRoute);
 
 
 app.listen(PORT, () => {

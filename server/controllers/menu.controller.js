@@ -1,4 +1,4 @@
-import uploadImageOnCloudinary from "../utils/imageUpload";
+import uploadImageOnCloudinary from "../utils/imageUpload.js";
 import {Menu} from "../models/menu.model.js"
 import { Restaurant } from "../models/restaurant.model.js";
 

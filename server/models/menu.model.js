@@ -1,19 +1,7 @@
 import mongoose from "mongoose";
 
-export interface IMenu {
-    // _id:mongoose.Schema.Types.ObjectId;
-    name:string;
-    description:string;
-    price:number;
-    image:string;
-}
 
-export interface IMenuDocument extends IMenu, Document {
-    reatedAt:Date;
-    updatedAt:Date;
-}
-
-const menuSchema = new mongoose.Schema<IMenuDocument>({
+const menuSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true

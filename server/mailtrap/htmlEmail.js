@@ -1,4 +1,4 @@
-export const htmlContent: string = `
+export const htmlContent = `
     <!DOCTYPE html>
     <html>
     <head>
@@ -76,7 +76,7 @@ export const htmlContent: string = `
     </html>
     `;
 
-export const generateWelcomeEmailHtml = (name: string) => {
+export const generateWelcomeEmailHtml = (name) => {
     return `
           <html>
             <head>
@@ -132,7 +132,7 @@ export const generateWelcomeEmailHtml = (name: string) => {
         `;
 };
 
-export const generatePasswordResetEmailHtml = (resetURL: string) => {
+export const generatePasswordResetEmailHtml = (resetURL) => {
     return `
       <html>
         <head>

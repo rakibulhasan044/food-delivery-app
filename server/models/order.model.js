@@ -1,37 +1,37 @@
 import mongoose from "mongoose";
 
-type DeliveryDeatils = {
-    email: string;
-    name: string;
-    address: string;
-    city: string;
-}
+// type DeliveryDeatils = {
+//     email: string;
+//     name: string;
+//     address: string;
+//     city: string;
+// }
 
-type CartItems = {
-    menuId: string;
-    name: string;
-    image: string;
-    price: number;
-    quantity: number;
-}
+// type CartItems = {
+//     menuId: string;
+//     name: string;
+//     image: string;
+//     price: number;
+//     quantity: number;
+// }
 
-export interface IOrder extends Document {
-    user: mongoose.Schema.Types.ObjectId;
-    restaurant: mongoose.Schema.Types.ObjectId;
-    deliveryDetails: DeliveryDeatils;
-    cartItems: CartItems;
-    totalAmount: number;
-    status: "pending" | "confirmed" | "preparing" | "outfordelivery" | "delivered"
-}
+// export interface IOrder extends Document {
+//     user: mongoose.Schema.Types.ObjectId;
+//     restaurant: mongoose.Schema.Types.ObjectId;
+//     deliveryDetails: DeliveryDeatils;
+//     cartItems: CartItems;
+//     totalAmount: number;
+//     status: "pending" | "confirmed" | "preparing" | "outfordelivery" | "delivered"
+// }
 
-const orderSchema = new mongoose.Schema<IOrder>({
+const orderSchema = new mongoose.Schema({
     user: {
-        type: mongoose.Schema.Types.ObjectId as any,
+        type: mongoose.Schema.Types.ObjectId ,
         ref: "User",
         required: true
     },
     restaurant: {
-        type: mongoose.Schema.Types.ObjectId as any,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Restaurant",
         required: true
     },

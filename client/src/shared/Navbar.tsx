@@ -24,6 +24,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useCartStore } from "@/store/useCartStore";
 import {
   HandPlatter,
   Loader2,
@@ -38,9 +39,12 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
+
 const Navbar = () => {
   const admin = true;
   const loading = false;
+ 
+
   return (
     <div className="max-w-7xl mx-auto">
       <div className="flex items-center justify-between h-14">

@@ -6,13 +6,8 @@ import { Loader, LockKeyhole, Mail, PhoneIncoming, User } from "lucide-react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { SignupInputState, userSignupSchema } from "../schema/userSchema";
+import { useUserStore } from "@/store/useUserStore";
 
-// type SignupInputState = {
-//   fullname: string;
-//   email: string;
-//   password: string;
-//   contact: string;
-// };
 
 const Signup = () => {
   const [input, setInput] = useState<SignupInputState>({
@@ -23,13 +18,14 @@ const Signup = () => {
   });
 
   const [errors, setErrors] = useState<Partial<SignupInputState>>({});
+  const {signup, loading} = useUserStore();
 
   const changeEventHabdler = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setInput({ ...input, [name]: value });
   };
 
-  const loginSubmitHandler = (e: FormEvent) => {
+  const loginSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
     setErrors({});
     const result = userSignupSchema.safeParse(input);
@@ -39,9 +35,10 @@ const Signup = () => {
       return;
     }
     console.log(input);
+    await signup(input);
+    
   };
 
-  const loading = false;
   return (
     <div className="flex items-center justify-center min-h-screen">
       <form

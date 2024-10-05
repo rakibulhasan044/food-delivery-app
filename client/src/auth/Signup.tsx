@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Loader, LockKeyhole, Mail, PhoneIncoming, User } from "lucide-react";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SignupInputState, userSignupSchema } from "../schema/userSchema";
 import { useUserStore } from "@/store/useUserStore";
 
@@ -19,6 +19,7 @@ const Signup = () => {
 
   const [errors, setErrors] = useState<Partial<SignupInputState>>({});
   const {signup, loading} = useUserStore();
+  const navigate = useNavigate();
 
   const changeEventHabdler = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,7 +36,12 @@ const Signup = () => {
       return;
     }
     console.log(input);
-    await signup(input);
+    try {
+      await signup(input);
+      navigate("/verify-email")
+    } catch (error) {
+      console.log(error);
+    }
     
   };
 

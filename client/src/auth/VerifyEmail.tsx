@@ -11,7 +11,7 @@ const VerifyEmail = () => {
   // const inputRef = useRef<(HTMLElement | null)[]>([]);
 
   const navigate = useNavigate();
- const { loading, verifyEmail } = useUserStore();
+  const { loading, verifyEmail } = useUserStore();
 
   const handleChange = (index: number, value: string) => {
     if (/^[a-zA-Z0-9]$/.test(value) || value === "") {
@@ -36,9 +36,14 @@ const VerifyEmail = () => {
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const verificationCode = otp.join(""); 
-    await verifyEmail(verificationCode)
-  }
+    const verificationCode = otp.join("");
+    try {
+      await verifyEmail(verificationCode);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen w-full">

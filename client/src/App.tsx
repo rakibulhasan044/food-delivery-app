@@ -1,5 +1,9 @@
 import Login from "./auth/Login";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import Signup from "./auth/Signup";
 import ForgotPassword from "./auth/ForgotPassword";
 import ResetPassword from "./auth/ResetPassword";
@@ -14,63 +18,129 @@ import Restaurant from "./admin/Restaurant";
 import AddMenu from "./admin/AddMenu";
 import Orders from "./admin/Orders";
 import Success from "./pages/Success";
+import { useUserStore } from "./store/useUserStore";
+import { useEffect } from "react";
+import Spinner from "./components/Spinner";
+
+const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, user } = useUserStore();
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!user?.isVerified) {
+    return <Navigate to="/verify-email" replace />;
+  }
+
+  return children;
+};
+
+const AuthenticatedUser = ({ children }: { children: React.ReactNode }) => {
+  const { user, isAuthenticated } = useUserStore();
+  if (isAuthenticated && user?.isVerified) {
+    return <Navigate to="/" />;
+  }
+  return children;
+};
+
+const AdminRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, isAuthenticated } = useUserStore();
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!user?.admin) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+};
 
 const appRouter = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
+    element: (
+      <ProtectedRoutes>
+        <MainLayout />
+      </ProtectedRoutes>
+    ),
     children: [
       {
-        path: '/',
-        element: <HeroSection />
+        path: "/",
+        element: <HeroSection />,
       },
       {
-        path: '/profile',
-        element: <Profile />
+        path: "/profile",
+        element: <Profile />,
       },
       {
-        path: '/search/:text',
-        element: <SearchPage />
+        path: "/search/:text",
+        element: <SearchPage />,
       },
       {
-        path: '/restaurant/:id',
-        element: <RestarauntDetails />
+        path: "/restaurant/:id",
+        element: <RestarauntDetails />,
       },
       {
-        path: '/cart',
-        element: <Cart />
+        path: "/cart",
+        element: <Cart />,
       },
       {
-        path: '/order/status',
-        element: <Success />
+        path: "/order/status",
+        element: <Success />,
       },
 
       //admin pages
       {
-        path: '/admin/restaurant',
-        element: <Restaurant />
+        path: "/admin/restaurant",
+        element: (
+          <AdminRoute>
+            {" "}
+            <Restaurant />
+          </AdminRoute>
+        ),
       },
       {
-        path: '/admin/menu',
-        element: <AddMenu />
+        path: "/admin/menu",
+        element: (
+          <AdminRoute>
+            <AddMenu />
+          </AdminRoute>
+        ),
       },
       {
-        path: '/admin/orders',
-        element: <Orders />
-      }
+        path: "/admin/orders",
+        element: (
+          <AdminRoute>
+            <Orders />
+          </AdminRoute>
+        ),
+      },
     ],
   },
   {
     path: "/signup",
-    element: <Signup />,
+    element: (
+      <AuthenticatedUser>
+        <Signup />
+      </AuthenticatedUser>
+    ),
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <AuthenticatedUser>
+        <Login />
+      </AuthenticatedUser>
+    ),
   },
   {
     path: "/forgot-password",
-    element: <ForgotPassword />,
+    element: (
+      <AuthenticatedUser>
+        <ForgotPassword />
+      </AuthenticatedUser>
+    ),
   },
   {
     path: "/reset-password",
@@ -80,10 +150,18 @@ const appRouter = createBrowserRouter([
     path: "/verify-email",
     element: <VerifyEmail />,
   },
-  
 ]);
 
 function App() {
+
+  const {checkAuthentication, isCheckingAuth} = useUserStore();
+
+  useEffect(() => {
+    //checking auth every time when page is loaded
+    checkAuthentication();
+  },[checkAuthentication])
+
+  if(isCheckingAuth) return <Spinner />
   return (
     <main>
       <RouterProvider router={appRouter}></RouterProvider>

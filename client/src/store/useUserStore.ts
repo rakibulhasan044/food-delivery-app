@@ -34,7 +34,9 @@ type UserState = {
     updateProfile: (input: any) => Promise<void>;
 }
 
+
 export const useUserStore = create<UserState>()(
+    
   persist(
     (set) => ({
       user: null,
@@ -51,6 +53,7 @@ export const useUserStore = create<UserState>()(
             },
           });
           if (response.data.success) {
+
             console.log(response.data);
             toast.success(response.data.message);
             set({
@@ -115,7 +118,7 @@ export const useUserStore = create<UserState>()(
                 set({loading: false, user: response.data.user, isAuthenticated: true, isCheckingAuth: false})
             }
         } catch (error) {
-            set({loading: false, isAuthenticated: false, isCheckingAuth: true});
+            set({loading: false, isAuthenticated: false, isCheckingAuth: false});
             console.log(error);
         }
       },

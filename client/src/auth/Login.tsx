@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Loader, LockKeyhole, Mail } from "lucide-react";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LoginInputState, userLoginSchema } from "../schema/userSchema";
 import { useUserStore } from "@/store/useUserStore";
 
@@ -21,6 +21,7 @@ const Login = () => {
 
   const [errors, setErrors] = useState<Partial<LoginInputState>>({});
   const {loading, login} = useUserStore();
+  const navigate = useNavigate();
 
   const changeEventHabdler = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,8 +38,12 @@ const Login = () => {
       setErrors(fieldErrors as Partial<LoginInputState>);
       return;
     }
-    console.log(input);
-    await login(input);
+    try {
+      await login(input);
+      navigate("/")
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

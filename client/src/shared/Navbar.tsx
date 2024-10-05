@@ -24,7 +24,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useCartStore } from "@/store/useCartStore";
+import { useUserStore } from "@/store/useUserStore";
 import {
   HandPlatter,
   Loader2,
@@ -39,11 +39,8 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-
 const Navbar = () => {
-  const admin = true;
-  const loading = false;
- 
+  const { user, loading, logout } = useUserStore();
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -56,7 +53,7 @@ const Navbar = () => {
             <Link to="/">Home</Link>
             <Link to="/profile">Profile</Link>
             <Link to="/order/status">Order</Link>
-            {admin && (
+            {user?.admin && (
               <Menubar>
                 <MenubarMenu>
                   <MenubarTrigger>Dashboard</MenubarTrigger>
@@ -113,7 +110,10 @@ const Navbar = () => {
                   Please wait
                 </Button>
               ) : (
-                <Button className="bg-orange hover:bg-hoverOrange">
+                <Button
+                  onClick={logout}
+                  className="bg-orange hover:bg-hoverOrange"
+                >
                   Logout
                 </Button>
               )}
@@ -132,6 +132,7 @@ const Navbar = () => {
 export default Navbar;
 
 const MobileNavbar = () => {
+  const { user, logout, loading } = useUserStore();
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -183,44 +184,54 @@ const MobileNavbar = () => {
             <ShoppingCart />
             <span>Cart(0)</span>
           </Link>
-          <Link
-            to="/admin/menu"
-            className="flex items-center gap-4 hover:bg-gray-200 py-2 rounded-lg cursor-pointer hover:text-gray-400"
-          >
-            <SquareMenu />
-            <span>Menu</span>
-          </Link>
-          <Link
-            to="/admin/restaurant"
-            className="flex items-center gap-4 hover:bg-gray-200 py-2 rounded-lg cursor-pointer hover:text-gray-400"
-          >
-            <UtensilsCrossed />
-            <span>Restaurant</span>
-          </Link>
-          <Link
-            to="/admin/orders"
-            className="flex items-center gap-4 hover:bg-gray-200 py-2 rounded-lg cursor-pointer hover:text-gray-400"
-          >
-            <PackageCheck />
-            <span>Restaurant Orders</span>
-          </Link>
+          {user?.admin && (
+            <>
+              <Link
+                to="/admin/menu"
+                className="flex items-center gap-4 hover:bg-gray-200 py-2 rounded-lg cursor-pointer hover:text-gray-400"
+              >
+                <SquareMenu />
+                <span>Menu</span>
+              </Link>
+              <Link
+                to="/admin/restaurant"
+                className="flex items-center gap-4 hover:bg-gray-200 py-2 rounded-lg cursor-pointer hover:text-gray-400"
+              >
+                <UtensilsCrossed />
+                <span>Restaurant</span>
+              </Link>
+              <Link
+                to="/admin/orders"
+                className="flex items-center gap-4 hover:bg-gray-200 py-2 rounded-lg cursor-pointer hover:text-gray-400"
+              >
+                <PackageCheck />
+                <span>Restaurant Orders</span>
+              </Link>
+            </>
+          )}
         </SheetDescription>
         <div className="flex flex-row items-center gap-2">
-            <Avatar>
-              <AvatarImage />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <h1 className="font-bold">Rakib</h1>
-          </div>
+          <Avatar>
+            <AvatarImage />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <h1 className="font-bold">Rakib</h1>
+        </div>
         <SheetFooter className="flex flex-col gap-4">
-          
           <SheetClose asChild>
-            <Button
-              type="submit"
-              className="w-full bg-orange hover:bg-hoverOrange"
-            >
-              Save changes
-            </Button>
+            {loading ? (
+              <Button className="bg-orange hover:bg-hoverOrange">
+                <Loader2 className="animate-spin mr-2 size-4" />
+                Please wait
+              </Button>
+            ) : (
+              <Button
+                onClick={logout}
+                className="bg-orange hover:bg-hoverOrange"
+              >
+                Logout
+              </Button>
+            )}
           </SheetClose>
         </SheetFooter>
       </SheetContent>

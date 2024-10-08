@@ -5,7 +5,8 @@ import crypto from "crypto";
 import cloudinary from "../utils/cloudinary.js";
 import { generateVerificationCode } from "../utils/generateVerificationCode.js";
 import { generateToken } from "../utils/generateToken.js";
-import { sendPasswordResetEmail, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email.js";
+import { sendPasswordResetEmail, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email.js"; 
+
 
 export const signup = async (req, res) => {
     try {
@@ -79,10 +80,11 @@ export const login = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" })
     }
 }
+
 export const verifyEmail = async (req, res) => {
+ 
     try {
         const { verificationCode } = req.body;
-       
         const user = await User.findOne({ verificationToken: verificationCode, verificationTokenExpiresAt: { $gt: Date.now() } }).select("-password");
 
         if (!user) {

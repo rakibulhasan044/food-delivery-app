@@ -1,18 +1,23 @@
 import { Restaurant } from "../models/restaurant.model.js"
 import {Order} from "../models/order.model.js"
 import uploadImageOnCloudinary from "../utils/imageUpload.js";
+
+
+
 export const createRestaurant = async (req, res) => {
     try {
         const { restaurantName, city, country, deliveryTime, cuisines } = req.body;
         const file = req.file;
-        const restaurant = await Restaurant.findOne({user:req.id});
-        if(restaurant) {
+ 
+
+        const restaurant = await Restaurant.findOne({ user: req.id });
+        if (restaurant) {
             return res.status(400).json({
                 success: false,
                 message: "Restaurant already exist for this user"
             })
         }
-        if(!file) {
+        if (!file) {
             return res.status(400).json({
                 success: false,
                 message: "Image is required"
@@ -27,39 +32,33 @@ export const createRestaurant = async (req, res) => {
             deliveryTime,
             cuisines: JSON.parse(cuisines),
             imageUrl
-        })
-
+        });
         return res.status(201).json({
             success: true,
             message: "Restaurant Added"
-        })
+        });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Internal server error"
-        })
+        return res.status(500).json({ message: "Internal server error" })
     }
 }
 
 export const getRestaurant = async (req, res) => {
     try {
-        const restaurant = await Restaurant.find({user:user.id});
-        if(!restaurant) {
-            return res.status(400).json({
+        const restaurant = await Restaurant.findOne({ user: req.id }).populate('menus');
+        if (!restaurant) {
+            return res.status(404).json({
                 success: false,
-                message: "Restaurant not found."
+                restaurant:[],
+                message: "Restaurant not found"
             })
-        }
-
+        };
         return res.status(200).json({
             success: true,
-            restaurant
-        })
+            restaurant });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Internal server error"
-        })
+        return res.status(500).json({ message: "Internal server error" })
     }
 }
 

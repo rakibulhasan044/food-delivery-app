@@ -1,6 +1,8 @@
 import {Restaurant} from "../models/restaurant.model.js"
 import { Order } from "../models/order.model.js";
 import Stripe from "stripe";
+import dotenv from 'dotenv';
+dotenv.config(); 
 
 const stripe = await Stripe(process.env.STRIPE_SECRET_KEY);
 

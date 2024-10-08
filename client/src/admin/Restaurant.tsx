@@ -63,6 +63,8 @@ const Restaurant = () => {
     }
   };
 
+  // console.log(restaurant);
+
   useEffect(() => {
     const fetchRestaurant = async () => {
       await getRestaurant();
@@ -163,7 +165,7 @@ const Restaurant = () => {
                   </span>
                 )}
               </div>
-              {/* <div>
+              <div>
                 <Label>Upload Retaurant Banner</Label>
                 <Input
                 onChange={(e) => setInput({...input, imageFile:e.target.files?.[0] || undefined})}
@@ -173,9 +175,9 @@ const Restaurant = () => {
                 //   value={input.imageFile}
                 //   onChange={changeEvenntHandler}
                 />
-                {errors && <span className="text-xs text-red-600 font-medium">{errors.imageFile?.name || "o"}</span>}
-              </div> */}
-              <div>
+                {errors && <span className="text-xs text-red-600 font-medium">{errors.imageFile?.name}</span>}
+              </div>
+              {/* <div>
                 <Label>Upload Restaurant Banner</Label>
                 <Input
                   onChange={(e) =>
@@ -195,7 +197,7 @@ const Restaurant = () => {
                       : "Image file is required and cannot be empty"}
                   </span>
                 )}
-              </div>
+              </div> */}
             </div>
             <div className="">
               {loading ? (

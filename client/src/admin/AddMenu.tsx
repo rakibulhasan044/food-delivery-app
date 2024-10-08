@@ -14,21 +14,9 @@ import { Loader2, Plus } from "lucide-react";
 import { FormEvent, useState } from "react";
 import EditMenu from "./EditMenu";
 import { MenuFormSchema, menuSchema } from "@/schema/menuSchema";
+import { useMenuStore } from "@/store/useMenuStore";
+import { useRestaurantStore } from "@/store/useRestaurantStore";
 
-const menus = [
-    {
-        name: "biriyani",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-        price: 100,
-        image: "https://t3.ftcdn.net/jpg/02/52/38/80/360_F_252388016_KjPnB9vglSCuUJAumCDNbmMzGdzPAucK.jpg"
-    },
-    {
-        name: "Kacchi",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-        price: 100,
-        image: "https://t3.ftcdn.net/jpg/02/52/38/80/360_F_252388016_KjPnB9vglSCuUJAumCDNbmMzGdzPAucK.jpg"
-    }
-] 
 
 const AddMenu = () => {
 
@@ -43,24 +31,45 @@ const AddMenu = () => {
   const [editOpen, setEditOpen] = useState<boolean>(false);
   const [selectedMenu, setSelectedMenu] = useState<any>();
   const [error, setError] = useState<Partial<MenuFormSchema>>({});
-
-  const loading = false;
+  const { loading, createMenu } = useMenuStore();
+  const { restaurant } = useRestaurantStore();
+  console.log(restaurant);
 
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value, type} = e.target;
     setInput({...input, [name]: type === "number" ? Number(value) : value})
+    
   }
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log('click');
+    console.log(input);
     const result = menuSchema.safeParse(input);
     if(!result.success) {
       const fieldErrors = result.error.formErrors.fieldErrors;
       setError(fieldErrors as Partial<MenuFormSchema>);
       return;
     }
-    console.log(input);
+    
+
+    try {
+      const formData = new FormData();
+      formData.append("name", input.name);
+      formData.append("description", input.description);
+      formData.append("price", input.price.toString());
+
+      if(input.image) {
+        formData.append("image", input.image);
+      }
+      await createMenu(formData);
+      
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  // console.log(restaurant.menus);
 
   return (
     <div className="max-w-6xl mx-auto my-10">
@@ -107,7 +116,7 @@ const AddMenu = () => {
               <div>
                 <Label>Price in (TK)</Label>
                 <Input
-                  type="text"
+                  type="number"
                   name="price"
                   value={input.price}
                   onChange={changeEventHandler}
@@ -116,13 +125,22 @@ const AddMenu = () => {
                 {error && <span className="text-xs font-medium text-red-600">{error.price}</span>}
               </div>
               <div>
-                <Label>upload Image</Label>
+              <Label>Upload Menu Image</Label>
                 <Input
-                type="file" 
-                name="image" 
-                // value={input.image}
-                onChange={(e) => setInput({...input, image: e.target.files?.[0] || undefined})}/>
-                {error && <span className="text-xs font-medium text-red-600">{error.image?.name}</span>}
+                  type="file"
+                  name="image"
+                  onChange={(e) =>
+                    setInput({
+                      ...input,
+                      image: e.target.files?.[0] || undefined,
+                    })
+                  }
+                />
+                {error && (
+                  <span className="text-xs font-medium text-red-600">
+                    {error.image?.name}
+                  </span>
+                )}
               </div>
               <DialogFooter className="mt-5">
                 {loading ? (
@@ -141,8 +159,8 @@ const AddMenu = () => {
         </Dialog>
       </div>
       {
-        menus.map((menu: any, idx:number) => (
-            <div key={idx} className="mt-6 space-y-4">
+        restaurant.menus.map((menu: any) => (
+            <div key={menu._id} className="mt-6 space-y-4">
         <div className="flex flex-col md:flex-row md:items-center md:space-x-4 md:p-4 p-2 shadow-md rounded-lg border">
           <img
             src={menu.image}

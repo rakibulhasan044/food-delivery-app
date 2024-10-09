@@ -63,7 +63,8 @@ const EditMenu = ({
       if(input.image) {
         formData.append("image", input.image);
       }
-      await editMenu(formData);
+      
+      await editMenu(selectedMenu._id,formData);
       
     } catch (error) {
       console.log(error);

@@ -17,16 +17,13 @@ import { MenuFormSchema, menuSchema } from "@/schema/menuSchema";
 import { useMenuStore } from "@/store/useMenuStore";
 import { useRestaurantStore } from "@/store/useRestaurantStore";
 
-
 const AddMenu = () => {
-
-    const [input, setInput] = useState<MenuFormSchema>({
-        name: "",
-        description: "",
-        price: 0,
-        image: undefined
-
-    })
+  const [input, setInput] = useState<MenuFormSchema>({
+    name: "",
+    description: "",
+    price: 0,
+    image: undefined,
+  });
   const [open, setOpen] = useState<boolean>(false);
   const [editOpen, setEditOpen] = useState<boolean>(false);
   const [selectedMenu, setSelectedMenu] = useState<any>();
@@ -36,22 +33,20 @@ const AddMenu = () => {
   console.log(restaurant);
 
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value, type} = e.target;
-    setInput({...input, [name]: type === "number" ? Number(value) : value})
-    
-  }
+    const { name, value, type } = e.target;
+    setInput({ ...input, [name]: type === "number" ? Number(value) : value });
+  };
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('click');
+    console.log("click");
     console.log(input);
     const result = menuSchema.safeParse(input);
-    if(!result.success) {
+    if (!result.success) {
       const fieldErrors = result.error.formErrors.fieldErrors;
       setError(fieldErrors as Partial<MenuFormSchema>);
       return;
     }
-    
 
     try {
       const formData = new FormData();
@@ -59,15 +54,14 @@ const AddMenu = () => {
       formData.append("description", input.description);
       formData.append("price", input.price.toString());
 
-      if(input.image) {
+      if (input.image) {
         formData.append("image", input.image);
       }
       await createMenu(formData);
-      
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   // console.log(restaurant.menus);
 
@@ -94,13 +88,18 @@ const AddMenu = () => {
             <form onSubmit={submitHandler} className="space-y-4">
               <div>
                 <Label>Name</Label>
-                <Input 
-                type="text" 
-                name="name" 
-                value={input.name}
-                onChange={changeEventHandler}
-                placeholder="Enter item name" />
-                {error && <span className="text-xs font-medium text-red-600">{error.name}</span>}
+                <Input
+                  type="text"
+                  name="name"
+                  value={input.name}
+                  onChange={changeEventHandler}
+                  placeholder="Enter item name"
+                />
+                {error && (
+                  <span className="text-xs font-medium text-red-600">
+                    {error.name}
+                  </span>
+                )}
               </div>
               <div>
                 <Label>Description</Label>
@@ -111,7 +110,11 @@ const AddMenu = () => {
                   onChange={changeEventHandler}
                   placeholder="Enter item description"
                 />
-                {error && <span className="text-xs font-medium text-red-600">{error.description}</span>}
+                {error && (
+                  <span className="text-xs font-medium text-red-600">
+                    {error.description}
+                  </span>
+                )}
               </div>
               <div>
                 <Label>Price in (TK)</Label>
@@ -122,10 +125,14 @@ const AddMenu = () => {
                   onChange={changeEventHandler}
                   placeholder="Enter item price"
                 />
-                {error && <span className="text-xs font-medium text-red-600">{error.price}</span>}
+                {error && (
+                  <span className="text-xs font-medium text-red-600">
+                    {error.price}
+                  </span>
+                )}
               </div>
               <div>
-              <Label>Upload Menu Image</Label>
+                <Label>Upload Menu Image</Label>
                 <Input
                   type="file"
                   name="image"
@@ -158,34 +165,43 @@ const AddMenu = () => {
           </DialogContent>
         </Dialog>
       </div>
-      {
-        restaurant.menus.map((menu: any) => (
-            <div key={menu._id} className="mt-6 space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center md:space-x-4 md:p-4 p-2 shadow-md rounded-lg border">
-          <img
-            src={menu.image}
-            alt=""
-            className="md:size-24 h-20 w-full object-cover rounded-lg"
-          />
-          <div className="flex-1">
-            <h1 className="text-lg font-semibold text-gray-800">{menu.name}</h1>
-            <p className="text-sm text-gray-600 mt-1">
-             {menu.description}
-            </p>
-            <h2 className="text-md font-semibold mt-2">
-              Price:
-              <span className="text-[#d19254] ml-1">{menu.price}</span>
-            </h2>
+      {restaurant?.menus.map((menu: any) => (
+        <div key={menu._id} className="mt-6 space-y-4">
+          <div className="flex flex-col md:flex-row md:items-center md:space-x-4 md:p-4 p-2 shadow-md rounded-lg border">
+            <img
+              src={menu.image}
+              alt=""
+              className="md:size-24 h-20 w-full object-cover rounded-lg"
+            />
+            <div className="flex-1">
+              <h1 className="text-lg font-semibold text-gray-800">
+                {menu.name}
+              </h1>
+              <p className="text-sm text-gray-600 mt-1">{menu.description}</p>
+              <h2 className="text-md font-semibold mt-2">
+                Price:
+                <span className="text-[#d19254] ml-1">{menu.price}</span>
+              </h2>
+            </div>
+            <Button
+              onClick={() => {
+                setSelectedMenu(menu);
+                setEditOpen(true);
+              }}
+              className="bg-orange hover:bg-hoverOrange mt-2"
+              size={"sm"}
+            >
+              Edit
+            </Button>
           </div>
-          <Button onClick={() => { setSelectedMenu(menu); setEditOpen(true)}} className="bg-orange hover:bg-hoverOrange mt-2" size={"sm"}>
-            Edit
-          </Button>
         </div>
-      </div>
-        ))
-      }
-      
-      <EditMenu selectedMenu = {selectedMenu} editOpen={editOpen} setEditOpen={setEditOpen} />
+      ))}
+
+      <EditMenu
+        selectedMenu={selectedMenu}
+        editOpen={editOpen}
+        setEditOpen={setEditOpen}
+      />
     </div>
   );
 };

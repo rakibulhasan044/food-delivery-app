@@ -63,7 +63,7 @@ const Restaurant = () => {
     }
   };
 
-  // console.log(restaurant);
+  console.log(restaurant);
 
   useEffect(() => {
     const fetchRestaurant = async () => {
@@ -79,7 +79,7 @@ const Restaurant = () => {
     };
     fetchRestaurant()
     console.log(restaurant);
-  }, [getRestaurant]);
+  }, [getRestaurant, restaurant]);
 
   return (
     <div className="max-w-6xl mx-auto my-10">

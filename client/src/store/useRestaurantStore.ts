@@ -1,108 +1,133 @@
-
+import { MenuItem, RestaurantState } from "@/types/restaurantType";
 import axios from "axios";
 import { toast } from "sonner";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-const API_END_POINT = "https://food-app-yt.onrender.com/api/v1/restaurant";
+const API_END_POINT = "http://localhost:8000/api/v1/restaurant";
 axios.defaults.withCredentials = true;
 
-
-export const useRestaurantStore = create<any>()(persist((set, get) => ({
-    loading: false,
-    restaurant: null,
-    searchedRestaurant: null,
-    appliedFilter: [],
-    singleRestaurant: null,
-    restaurantOrder: [],
-    createRestaurant: async (formData: FormData) => {
+export const useRestaurantStore = create<RestaurantState>()(
+  persist(
+    (set, get) => ({
+      loading: false,
+      restaurant: null,
+      searchedRestaurant: null,
+      appliedFilter: [],
+      singleRestaurant: null,
+      restaurantOrder: [],
+      createRestaurant: async (formData: FormData) => {
         try {
-            set({ loading: true });
-            const response = await axios.post(`${API_END_POINT}/`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            if (response.data.success) {
-                toast.success(response.data.message);
-                set({ loading: false });
-            }
+          set({ loading: true });
+          const response = await axios.post(`${API_END_POINT}/`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+          if (response.data.success) {
+            toast.success(response.data.message);
+            set({ loading: false });
+          }
         } catch (error: any) {
-            toast.error(error.response.data.message);
-            set({ loading: false });
+          toast.error(error.response.data.message);
+          set({ loading: false });
         }
-    },
-    getRestaurant: async () => {
+      },
+      getRestaurant: async () => {
         try {
-            set({ loading: true });
-            const response = await axios.get(`${API_END_POINT}/`);
-            if (response.data.success) {
-                set({ loading: false, restaurant: response.data.restaurant });
-            }
+          set({ loading: true });
+          const response = await axios.get(`${API_END_POINT}/`);
+          if (response.data.success) {
+            set({ loading: false, restaurant: response.data.restaurant });
+          }
         } catch (error: any) {
-            if (error.response.status === 404) {
-                set({ restaurant: null });
-            }
-            set({ loading: false });
+          if (error.response.status === 404) {
+            set({ restaurant: null });
+          }
+          set({ loading: false });
         }
-    },
-    updateRestaurant: async (formData: FormData) => {
+      },
+      updateRestaurant: async (formData: FormData) => {
         try {
-            set({ loading: true });
-            const response = await axios.put(`${API_END_POINT}/`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            if (response.data.success) {
-                toast.success(response.data.message);
-                set({ loading: false });
-            }
+          set({ loading: true });
+          const response = await axios.put(`${API_END_POINT}/`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+          if (response.data.success) {
+            toast.success(response.data.message);
+            set({ loading: false });
+          }
         } catch (error: any) {
-            toast.error(error.response.data.message);
-            set({ loading: false });
+          toast.error(error.response.data.message);
+          set({ loading: false });
         }
-    },
-    searchRestaurant: async (searchText: string, searchQuery: string, selectedCuisines: any) => {
+      },
+      searchRestaurant: async (
+        searchText: string,
+        searchQuery: string,
+        selectedCuisines: any
+      ) => {
         try {
-            set({ loading: true });
+          set({ loading: true });
 
-            const params = new URLSearchParams();
-            params.set("searchQuery", searchQuery);
-            params.set("selectedCuisines", selectedCuisines.join(","));
+          const params = new URLSearchParams();
+          params.set("searchQuery", searchQuery);
+          params.set("selectedCuisines", selectedCuisines.join(","));
 
-            // await new Promise((resolve) => setTimeout(resolve, 2000));
-            const response = await axios.get(`${API_END_POINT}/search/${searchText}?${params.toString()}`);
-            if (response.data.success) {
-                set({ loading: false, searchedRestaurant: response.data });
-            }
-        } catch (error:any) {
-            set({ loading: false });
+          // await new Promise((resolve) => setTimeout(resolve, 2000));
+          const response = await axios.get(
+            `${API_END_POINT}/search/${searchText}?${params.toString()}`
+          );
+          if (response.data.success) {
+            console.log(response.data);
+            set({ loading: false, searchedRestaurant: response.data });
+          }
+        } catch (error) {
+          set({ loading: false });
         }
-    },
-    addMenuToRestaurant: (menu: any) => {
+      },
+      addMenuToRestaurant: (menu: MenuItem) => {
         set((state: any) => ({
-            restaurant: state.restaurant ? { ...state.restaurant, menus: [...state.restaurant.menus, menu] } : null,
-        }))
-    },
-    updateMenuToRestaurant: (updatedMenu: any) => {
+          restaurant: state.restaurant
+            ? { ...state.restaurant, menus: [...state.restaurant.menus, menu] }
+            : null,
+        }));
+      },
+      updateMenuToRestaurant: (updatedMenu: MenuItem) => {
         set((state: any) => {
-            
-            if (state.restaurant) {
-                const updatedMenuList = state.restaurant.menus.map((menu: any) => menu._id === updatedMenu._id ? updatedMenu : menu);
-                return {
-                    restaurant: {
-                        ...state.restaurant,
-                        menus: updatedMenuList
-                    }
-                }
-            }
-            // if state.restaruant is undefined then return state
-            return state;
-        })
-    },
-
-}), {
-    name: 'restaurant-name',
-    storage: createJSONStorage(() => localStorage)
-}))
+          if (state.restaurant) {
+            const updatedMenuList = state.restaurant.menus.map((menu: any) =>
+              menu._id === updatedMenu._id ? updatedMenu : menu
+            );
+            return {
+              restaurant: {
+                ...state.restaurant,
+                menus: updatedMenuList,
+              },
+            };
+          }
+          // if state.restaruant is undefined then return state
+          return state;
+        });
+      },
+      setAppliedFilter: (value: string) => {
+        set((state) => {
+          const isAlreadyApplied = state.appliedFilter.includes(value);
+          const updatedFilter = isAlreadyApplied
+            ? state.appliedFilter.filter((item) => item !== value)
+            : [...state.appliedFilter, value];
+          return { appliedFilter: updatedFilter };
+        });
+      },
+      resetAppliedFilter: () => {
+        set({ appliedFilter: [] });
+      },
+    }),
+    {
+      name: "restaurant-name",
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);

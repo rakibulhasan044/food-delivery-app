@@ -30,17 +30,15 @@ const AddMenu = () => {
   const [error, setError] = useState<Partial<MenuFormSchema>>({});
   const { loading, createMenu } = useMenuStore();
   const { restaurant } = useRestaurantStore();
-  console.log(restaurant);
 
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // e.preventDefault();
     const { name, value, type } = e.target;
     setInput({ ...input, [name]: type === "number" ? Number(value) : value });
   };
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("click");
-    console.log(input);
     const result = menuSchema.safeParse(input);
     if (!result.success) {
       const fieldErrors = result.error.formErrors.fieldErrors;
@@ -63,7 +61,7 @@ const AddMenu = () => {
     }
   };
 
-  // console.log(restaurant.menus);
+  console.log(restaurant?.menus);
 
   return (
     <div className="max-w-6xl mx-auto my-10">
@@ -171,7 +169,7 @@ const AddMenu = () => {
             <img
               src={menu.image}
               alt=""
-              className="md:size-24 h-20 w-full object-cover rounded-lg"
+              className="md:h-24 md:w-32 h-32  w-full object-cover rounded-lg"
             />
             <div className="flex-1">
               <h1 className="text-lg font-semibold text-gray-800">

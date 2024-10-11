@@ -18,30 +18,31 @@ const Restaurant = () => {
     cuisines: [],
     imageFile: undefined,
   });
-
   const [errors, setErrors] = useState<Partial<RestaurantFormSchema>>({});
-  const { loading, restaurant, createRestaurant, updateRestaurant, getRestaurant } = useRestaurantStore();
+  const {
+    loading,
+    restaurant,
+    updateRestaurant,
+    createRestaurant,
+    getRestaurant,
+  } = useRestaurantStore();
 
-  const changeEvenntHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // const type = e.target.type
+  const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
     setInput({ ...input, [name]: type === "number" ? Number(value) : value });
   };
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrors({});
+
     const result = restaurantFormSchema.safeParse(input);
     if (!result.success) {
       const fieldErrors = result.error.formErrors.fieldErrors;
       setErrors(fieldErrors as Partial<RestaurantFormSchema>);
       return;
     }
-
-    //add restaurant api
-    console.log(input);
+    // add restaurant api implementation start from here
     try {
-      console.log("click");
       const formData = new FormData();
       formData.append("restaurantName", input.restaurantName);
       formData.append("city", input.city);
@@ -54,8 +55,10 @@ const Restaurant = () => {
       }
 
       if (restaurant) {
+        // update
         await updateRestaurant(formData);
       } else {
+        // create
         await createRestaurant(formData);
       }
     } catch (error) {
@@ -63,24 +66,27 @@ const Restaurant = () => {
     }
   };
 
-  console.log(restaurant);
-
   useEffect(() => {
     const fetchRestaurant = async () => {
       await getRestaurant();
-      setInput({
-        restaurantName:restaurant.restaurantName || "",
-        city: restaurant.city || "",
-        country: restaurant.country || "",
-        deliveryTime: restaurant.deliveryTime || 0,
-        cuisines: restaurant.cuisines ? restaurant.cuisines.map((cuisine: string) => cuisine) :  [],
-        imageFile: undefined,
-      });
-    };
-    fetchRestaurant()
-    console.log(restaurant);
-  }, [getRestaurant, restaurant]);
+      if(restaurant){
+        setInput({
+          restaurantName: restaurant.restaurantName || "",
+          city: restaurant.city || "",
+          country: restaurant.country || "",
+          deliveryTime: restaurant.deliveryTime || 0,
+          cuisines: restaurant.cuisines
+            ? restaurant.cuisines.map((cuisine: string) => cuisine)
+            : [],
+          imageFile: undefined,
+        });
+      };
+      }
+    fetchRestaurant();
+    
+  }, [restaurant?._id]);
 
+ 
   return (
     <div className="max-w-6xl mx-auto my-10">
       <div>
@@ -88,14 +94,15 @@ const Restaurant = () => {
           <h1 className="font-extrabold text-2xl mb-5">Add Restaurants</h1>
           <form onSubmit={submitHandler}>
             <div className="md:grid grid-cols-2 gap-6 space-y-2 md:space-y-0">
+              {/* Restaurant Name  */}
               <div>
-                <Label>Reataurant Name</Label>
+                <Label>Restaurant Name</Label>
                 <Input
                   type="text"
                   name="restaurantName"
                   value={input.restaurantName}
-                  onChange={changeEvenntHandler}
-                  placeholder="Enter your retaurant name"
+                  onChange={changeEventHandler}
+                  placeholder="Enter your restaurant name"
                 />
                 {errors && (
                   <span className="text-xs text-red-600 font-medium">
@@ -109,7 +116,7 @@ const Restaurant = () => {
                   type="text"
                   name="city"
                   value={input.city}
-                  onChange={changeEvenntHandler}
+                  onChange={changeEventHandler}
                   placeholder="Enter your city name"
                 />
                 {errors && (
@@ -124,7 +131,7 @@ const Restaurant = () => {
                   type="text"
                   name="country"
                   value={input.country}
-                  onChange={changeEvenntHandler}
+                  onChange={changeEventHandler}
                   placeholder="Enter your country name"
                 />
                 {errors && (
@@ -139,8 +146,8 @@ const Restaurant = () => {
                   type="number"
                   name="deliveryTime"
                   value={input.deliveryTime}
-                  onChange={changeEvenntHandler}
-                  placeholder="Delivery time"
+                  onChange={changeEventHandler}
+                  placeholder="Enter your delivery time"
                 />
                 {errors && (
                   <span className="text-xs text-red-600 font-medium">
@@ -157,7 +164,7 @@ const Restaurant = () => {
                   onChange={(e) =>
                     setInput({ ...input, cuisines: e.target.value.split(",") })
                   }
-                  placeholder="e.g. Momos, Biriyani"
+                  placeholder="e.g. Momos, Biryani"
                 />
                 {errors && (
                   <span className="text-xs text-red-600 font-medium">
@@ -166,18 +173,6 @@ const Restaurant = () => {
                 )}
               </div>
               <div>
-                <Label>Upload Retaurant Banner</Label>
-                <Input
-                onChange={(e) => setInput({...input, imageFile:e.target.files?.[0] || undefined})}
-                  type="file"
-                  accept="image/*"
-                  name="imageFile"
-                //   value={input.imageFile}
-                //   onChange={changeEvenntHandler}
-                />
-                {errors && <span className="text-xs text-red-600 font-medium">{errors.imageFile?.name}</span>}
-              </div>
-              {/* <div>
                 <Label>Upload Restaurant Banner</Label>
                 <Input
                   onChange={(e) =>
@@ -190,27 +185,24 @@ const Restaurant = () => {
                   accept="image/*"
                   name="imageFile"
                 />
-                {errors.imageFile && (
+                {errors && (
                   <span className="text-xs text-red-600 font-medium">
-                    {typeof errors.imageFile === "string"
-                      ? errors.imageFile
-                      : "Image file is required and cannot be empty"}
+                    {errors.imageFile?.name}
                   </span>
                 )}
-              </div> */}
+              </div>
             </div>
-            <div className="">
+            <div className="my-5 w-fit">
               {loading ? (
-                <Button
-                  disabled
-                  className="bg-orange hover:bg-hoverOrange mt-5"
-                >
-                  <Loader2 className="mr-2 size-4 animate-spin" />
-                  Please Wait
+                <Button disabled className="bg-orange hover:bg-hoverOrange">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Please wait
                 </Button>
               ) : (
-                <Button className="bg-orange hover:bg-hoverOrange mt-5">
-                  {restaurant ? "Update Restaurant" : "Add Your Restaurant"}
+                <Button className="bg-orange hover:bg-hoverOrange">
+                  {restaurant
+                    ? "Update Your Restaurant"
+                    : "Add Your Restaurant"}
                 </Button>
               )}
             </div>

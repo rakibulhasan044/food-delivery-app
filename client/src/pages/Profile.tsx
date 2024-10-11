@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useUserStore } from "@/store/useUserStore";
 import {
   Loader2,
   LocateIcon,
@@ -13,16 +14,18 @@ import {
 import { FormEvent, useRef, useState } from "react";
 
 const Profile = () => {
+
+  const { user } = useUserStore();
   const imageRef = useRef<HTMLInputElement | null>(null);
   const [selectedProfilePicture, setSelectedProfilePicture] =
     useState<string>("");
   const [profileData, setProfileData] = useState({
-    fullname: "",
-    email: "",
-    address: "",
-    city: "",
-    country: "",
-    profilePicture: "",
+    fullname: user?.fullname || "",
+    email: user?.email || "",
+    address: user?.address || "",
+    city: user?.city || "",
+    country: user?.country || "",
+    profilePicture: user?.profilePicture || "",
   });
 
   const loading = false;

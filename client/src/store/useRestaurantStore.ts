@@ -124,6 +124,16 @@ export const useRestaurantStore = create<RestaurantState>()(
       resetAppliedFilter: () => {
         set({ appliedFilter: [] });
       },
+      getSingleRestaurant: async (restaurantId: string) => {
+        try {
+          const response = await axios.get(`${API_END_POINT}/${restaurantId}`);
+          if (response.data.success) {
+            set({ singleRestaurant: response.data.restaurant });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
     }),
     {
       name: "restaurant-name",

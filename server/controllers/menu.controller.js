@@ -38,7 +38,9 @@ export const addMenu = async (req, res) => {
     }
 }
 
+
 export const editMenu = async (req, res) => {
+    console.log('edit');
     try {
         const {id} = req.params;
         const {name, description, price} = req.body;

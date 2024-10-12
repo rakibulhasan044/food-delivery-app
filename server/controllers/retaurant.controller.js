@@ -149,38 +149,86 @@ export const updateOrderStatus = async (req, res) => {
     }
 }
 
+// export const searchRestaurant = async (req, res) => {
+//     try {
+//         const searchText = req.params.searchText || "";
+//         const searchQuery = req.query.searchQuery || "";
+//         const selectedCuisines = (req.query.selectedCuisines || "").split(",").filter(cuisine => cuisine);
+//         const query = {};
+//         // basic search based on searchText (name ,city, country)
+//         console.log(selectedCuisines);
+//         console.log(searchText);
+        
+//         if (searchText) {
+//             query.$or = [
+//                 { restaurantName: { $regex: searchText, $options: 'i' } },
+//                 { city: { $regex: searchText, $options: 'i' } },
+//                 { country: { $regex: searchText, $options: 'i' } },
+//             ]
+//         }
+//         // filter on the basis of searchQuery
+//         if (searchQuery) {
+//             query.$or = [
+//                 { restaurantName: { $regex: searchQuery, $options: 'i' } },
+//                 { cuisines: { $regex: searchQuery, $options: 'i' } }
+//             ]
+//         }
+//         console.log(":query",query);
+//         // ["momos", "burger"]
+//         if(selectedCuisines.length > 0){
+//             query.cuisines = {$in:selectedCuisines}
+//         }
+        
+//         const restaurants = await Restaurant.find(query);
+//         console.log("res:", restaurants);
+//         return res.status(200).json({
+//             success:true,
+//             data:restaurants
+//         });
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(500).json({
+//             message: "Internal server error"
+//         })
+//     }
+// }
+
 export const searchRestaurant = async (req, res) => {
     try {
         const searchText = req.params.searchText || "";
-        const searchQuery = req.query.searchQuery
-        const selectedCuisines = (req.query.selectedCuisines || "").splite(",").filter(cuisine => cuisine);
-
+        const searchQuery = req.query.searchQuery || "";
+        const selectedCuisines = (req.query.selectedCuisines || "").split(",").filter(cuisine => cuisine);
         const query = {};
-        //basic search based on searchText(name, city, country)
-        if(searchText) {
+        
+        // console.log(selectedCuisines);
+        // console.log(searchText);
+        
+        if (searchText) {
             query.$or = [
-                {restaurantName: {$regex: searchText, $options: 'i'}},
-                {city: {$regex: searchText, $options: 'i'}},
-                {country: {$regex: searchText, $options: 'i',}}
+                { restaurantName: { $regex: searchText, $options: 'i' } },
+                { city: { $regex: searchText, $options: 'i' } },
+                { country: { $regex: searchText, $options: 'i' } },
             ]
         }
-        //filter on the basic of searchQuery
-        if(searchQuery) {
+        
+        if (searchQuery) {
             query.$or = [
-                {restaurantName: {$regex: searchText, $options: 'i'}},
-                {cuisines: {$regex: searchQuery, $options: 'i'}},
+                { restaurantName: { $regex: searchQuery, $options: 'i' } },
+                { cuisines: { $regex: searchQuery, $options: 'i' } }
             ]
         }
-        console.log(query);
-
-        if(selectedCuisines.length > 0) {
+        
+        // console.log(":query", query);
+        
+        if(selectedCuisines.length > 0){
             query.cuisines = {$in: selectedCuisines}
         }
-
-        const restaurant = await Restaurant.find(query);
+        
+        const restaurants = await Restaurant.find(query);
+        // console.log("res:", restaurants);
         return res.status(200).json({
             success: true,
-            data: restaurant
+            data: restaurants
         });
     } catch (error) {
         console.log(error);
@@ -189,6 +237,8 @@ export const searchRestaurant = async (req, res) => {
         })
     }
 }
+
+
 
 export const getSingleRestaurant = async (req, res) => {
     try {

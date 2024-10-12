@@ -111,6 +111,7 @@ export const verifyEmail = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" })
     }
 }
+
 export const logout = async (req, res) => {
     try {
         return res.clearCookie("token").status(200).json({
@@ -122,6 +123,7 @@ export const logout = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" })
     }
 };
+
 export const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
@@ -153,6 +155,7 @@ export const forgotPassword = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
 export const resetPassword = async (req, res) => {
     try {
         const { token } = req.params;
@@ -183,6 +186,7 @@ export const resetPassword = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 }
+
 export const checkAuth = async (req, res) => {
     try {
         const userId = req.id;
@@ -202,6 +206,7 @@ export const checkAuth = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
 export const updateProfile = async (req, res) => {
     try {
         const userId = req.id;

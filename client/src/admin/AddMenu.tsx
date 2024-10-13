@@ -61,7 +61,7 @@ const AddMenu = () => {
     }
   };
 
-  console.log(restaurant?.menus);
+  // console.log(restaurant?.menus);
 
   return (
     <div className="max-w-6xl mx-auto my-10">

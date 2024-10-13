@@ -8,12 +8,13 @@ import { useParams } from "react-router-dom";
 const RestarauntDetails = () => {
   const params = useParams()
   const {singleRestaurant, getSingleRestaurant} = useRestaurantStore();
+  
 
   useEffect(() => {
     getSingleRestaurant(params.id!)
   },[params.id])
 
-  console.log(singleRestaurant);
+  // console.log(singleRestaurant);
 
   return (
     <div className="max-w-6xl mx-auto my-10">

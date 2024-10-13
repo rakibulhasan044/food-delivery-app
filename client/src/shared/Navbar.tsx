@@ -24,6 +24,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useCartStore } from "@/store/useCartStore";
 import { useUserStore } from "@/store/useUserStore";
 import {
   HandPlatter,
@@ -41,6 +42,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const { user, loading, logout } = useUserStore();
+  const {cart} = useCartStore();
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -90,12 +92,17 @@ const Navbar = () => {
             </div>
             <Link to="/cart" className="relative cursor-pointer">
               <ShoppingCart />
-              <Button
+              {
+                cart.length > 0 && (
+                  <Button
                 size={"icon"}
                 className="absolute -inset-y-3 left-2 text-xs rounded-full size-4 bg-red-500 hover:bg-red-500"
               >
-                5
+                {cart.length}
               </Button>
+                )
+              }
+              
             </Link>
             <div>
               <Avatar>

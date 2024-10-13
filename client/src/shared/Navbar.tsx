@@ -66,7 +66,7 @@ const Navbar = () => {
                     <Link to="/admin/menu">
                       <MenubarItem>Menu</MenubarItem>
                     </Link>
-                    <Link to="/admin/order">
+                    <Link to="/admin/orders">
                       <MenubarItem>Order</MenubarItem>
                     </Link>
                   </MenubarContent>

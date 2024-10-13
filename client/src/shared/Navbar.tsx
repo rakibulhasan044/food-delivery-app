@@ -106,7 +106,7 @@ const Navbar = () => {
             </Link>
             <div>
               <Avatar>
-                <AvatarImage />
+                <AvatarImage src={user?.profilePicture} />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </div>
@@ -219,7 +219,7 @@ const MobileNavbar = () => {
         </SheetDescription>
         <div className="flex flex-row items-center gap-2">
           <Avatar>
-            <AvatarImage />
+            <AvatarImage src={user?.profilePicture} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <h1 className="font-bold">Rakib</h1>

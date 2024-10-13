@@ -14,7 +14,7 @@ const AvailavleMenu = ({ menus }: { menus: MenuItem }) => {
         Available Menu
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {menus.map((menu: MenuItem) => (
+        {menus?.map((menu: MenuItem) => (
           <Card
             key={menu._id}
             className="md:max-w-lg mx-auto shadow-lg rounded-lg overflow-hidden"

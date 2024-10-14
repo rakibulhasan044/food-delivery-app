@@ -25,6 +25,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useCartStore } from "@/store/useCartStore";
+import { useThemeStore } from "@/store/useThemeStore";
 import { useUserStore } from "@/store/useUserStore";
 import {
   HandPlatter,
@@ -38,9 +39,12 @@ import {
   User,
   UtensilsCrossed,
 } from "lucide-react";
+// import { useTheme } from "next-themes";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+
+  const {setTheme} = useThemeStore();
   const { user, loading, logout } = useUserStore();
   const {cart} = useCartStore();
 
@@ -85,8 +89,8 @@ const Navbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Light</DropdownMenuItem>
-                  <DropdownMenuItem>Dark</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme('light')}>Light</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme('dark')}>Dark</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -139,6 +143,8 @@ const Navbar = () => {
 export default Navbar;
 
 const MobileNavbar = () => {
+
+  const {setTheme} = useThemeStore();
   const { user, logout, loading } = useUserStore();
   return (
     <Sheet>
@@ -163,8 +169,8 @@ const MobileNavbar = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>Light</DropdownMenuItem>
-              <DropdownMenuItem>Dark</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme('light')}>Light</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme('dark')}>Dark</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </SheetHeader>

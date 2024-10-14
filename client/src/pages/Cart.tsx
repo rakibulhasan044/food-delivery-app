@@ -20,9 +20,11 @@ const Cart = () => {
   const [open, setOpen] = useState<boolean>(false);
   const { cart, incrementQuantity, decrementQuantity } = useCartStore();
 
-  const totalAmount = cart.reduce((acc, ele) => {
+  let totalAmount = cart.reduce((acc, ele) => {
     return acc + ele.price * ele.quantity
   }, 0);
+
+  console.log(totalAmount);
 
   return (
     <div className="flex flex-col max-w-7xl mx-auto my-10">

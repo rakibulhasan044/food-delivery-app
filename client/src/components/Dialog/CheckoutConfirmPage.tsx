@@ -16,14 +16,14 @@ import { useRestaurantStore } from "@/store/useRestaurantStore";
 import { useOrderStore } from "@/store/useOrderStore";
 import { Loader2 } from "lucide-react";
 
-const CheckoutConfirmPage = ({
+const CheckoutConfirmPage =  ({
   open,
   setOpen,
 }: {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const {user} = useUserStore();
+  const { user } = useUserStore();
   const [input, setInput] = useState({
     name: user?.fullname || "",
     email: user?.email || "",
@@ -32,17 +32,16 @@ const CheckoutConfirmPage = ({
     city: user?.city || "",
     country: user?.country || "",
   });
+  const { cart } = useCartStore();
+  const { restaurant } = useRestaurantStore();
+  const { createCheckoutSession, loading } = useOrderStore();
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setInput({ ...input, [name]: value });
   };
-
-  const { cart } = useCartStore();
-  const {restaurant} = useRestaurantStore();
-  const {createCheckoutSession, loading} = useOrderStore();
   const checkoutHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(input);
+    // api implementation start from here
     try {
       const checkoutData: CheckoutSessionRequest = {
         cartItems: cart.map((cartItem) => ({
@@ -52,27 +51,29 @@ const CheckoutConfirmPage = ({
           price: cartItem.price.toString(),
           quantity: cartItem.quantity.toString(),
         })),
-        deliveryDetails:input,
+        deliveryDetails: input,
         restaurantId: restaurant?._id as string,
-      }
-      await createCheckoutSession(checkoutData)
+      };
+      await createCheckoutSession(checkoutData);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
-        <DialogTitle className="font-bold">Review Your Order</DialogTitle>
+        <DialogTitle className="font-semibold">Review Your Order</DialogTitle>
         <DialogDescription className="text-xs">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Obcaecati
-          temporibus expedita iusto doloremque sequi quas atque omnis quam
-          pariatur ex?
+          Double-check your delivery details and ensure everything is in order.
+          When you are ready, hit confirm button to finalize your order
         </DialogDescription>
-        <form onSubmit={checkoutHandler} className="md:grid grid-cols-2 gap-2 space-y-2 md:space-y-0">
-          <div className="">
-            <Label>Full Name</Label>
+        <form
+          onSubmit={checkoutHandler}
+          className="md:grid grid-cols-2 gap-2 space-y-1 md:space-y-0"
+        >
+          <div>
+            <Label>Fullname</Label>
             <Input
               type="text"
               name="name"
@@ -80,17 +81,17 @@ const CheckoutConfirmPage = ({
               onChange={changeEventHandler}
             />
           </div>
-          <div className="">
+          <div>
             <Label>Email</Label>
             <Input
-            disabled
+              disabled
               type="email"
               name="email"
               value={input.email}
               onChange={changeEventHandler}
             />
           </div>
-          <div className="">
+          <div>
             <Label>Contact</Label>
             <Input
               type="text"
@@ -99,7 +100,7 @@ const CheckoutConfirmPage = ({
               onChange={changeEventHandler}
             />
           </div>
-          <div className="">
+          <div>
             <Label>Address</Label>
             <Input
               type="text"
@@ -108,7 +109,7 @@ const CheckoutConfirmPage = ({
               onChange={changeEventHandler}
             />
           </div>
-          <div className="">
+          <div>
             <Label>City</Label>
             <Input
               type="text"
@@ -117,8 +118,7 @@ const CheckoutConfirmPage = ({
               onChange={changeEventHandler}
             />
           </div>
-
-          <div className="">
+          <div>
             <Label>Country</Label>
             <Input
               type="text"
@@ -127,21 +127,23 @@ const CheckoutConfirmPage = ({
               onChange={changeEventHandler}
             />
           </div>
-          <DialogFooter className="col-span-2 pt-5 ">
-            {
-              loading ? (
-                <Button className="bg-orange hover:bg-hoverOrange">
-                  <Loader2 className="size-4 mr-2 animate-spin" />Please Wait</Button>
-              ) : (
-                <Button className="bg-orange hover:bg-hoverOrange">Continue to Payment</Button>
-              )
-            }
-            
+          <DialogFooter className="col-span-2 pt-5">
+            {loading ? (
+              <Button disabled className="bg-orange hover:bg-hoverOrange">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please wait
+              </Button>
+            ) : (
+              <Button className="bg-orange hover:bg-hoverOrange">
+                Continue To Payment
+              </Button>
+            )}
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
   );
 };
+
 
 export default CheckoutConfirmPage;

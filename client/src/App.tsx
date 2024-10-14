@@ -21,6 +21,7 @@ import Success from "./pages/Success";
 import { useUserStore } from "./store/useUserStore";
 import { useEffect } from "react";
 import Spinner from "./components/Spinner";
+import { useThemeStore } from "./store/useThemeStore";
 
 const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, user } = useUserStore();
@@ -154,11 +155,13 @@ const appRouter = createBrowserRouter([
 
 function App() {
 
+  const initializeTheme = useThemeStore((state:any) => state.initializeTheme)
   const {checkAuthentication, isCheckingAuth} = useUserStore();
 
   useEffect(() => {
-    //checking auth every time when page is loaded
+    
     checkAuthentication();
+    initializeTheme()
   },[checkAuthentication])
 
   if(isCheckingAuth) return <Spinner />
